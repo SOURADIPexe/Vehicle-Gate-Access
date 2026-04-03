@@ -17,16 +17,16 @@ export const VehicleTable = ({ vehicles, onDelete }) => (
         {vehicles.map((v) => (
           // Use MongoDB _id for the key
           <tr key={v._id} className="hover:bg-slate-50/50 transition-colors">
-            
+
             {/* 1. Owner Name */}
             <td className="py-5 px-2 font-medium text-slate-700">{v.owner}</td>
-            
+
             {/* 2. Contact */}
             <td className="py-5 px-2 text-slate-500">{v.contact}</td>
-            
+
             {/* 3. NEW: Vehicle Type (Added this column) */}
             <td className="py-5 px-2 text-slate-500 text-sm">
-              {v.type || "4-Wheeler"} 
+              {v.type || "4-Wheeler"}
             </td>
 
             {/* 4. License Plate */}
@@ -39,7 +39,7 @@ export const VehicleTable = ({ vehicles, onDelete }) => (
             {/* 5. Actions */}
             <td className="py-5 px-2">
               <div className="flex justify-center">
-                <button 
+                <button
                   onClick={() => onDelete(v._id)}
                   className="text-rose-500 hover:bg-rose-50 p-2 rounded-lg transition-colors group"
                   title="Delete Vehicle"

@@ -11,7 +11,7 @@ const SpotCard = ({ spot, status }) => {
   if (status === 'allocated') {
     cardStyle = 'bg-[#22c55e] border-[#22c55e] text-white shadow-md transform scale-105'; // Green
     textStyle = 'text-green-100';
-  } 
+  }
   // Case 2: Blue (Reserved) - From Reservation DB
   else if (status === 'reserved') {
     cardStyle = 'bg-[#3b82f6] border-[#3b82f6] text-white shadow-md'; // Blue
@@ -53,7 +53,7 @@ export const ParkingMap = ({ spots }) => {
         const green = recDb.data
           .filter(r => r.slot || r.spot) // Ensure slot exists
           .map(r => r.slot || r.spot);   // Extract the ID
-        
+
         setAllocatedSlots(green);
 
         // DEBUG: Check console to verify data is arriving
@@ -85,7 +85,7 @@ export const ParkingMap = ({ spots }) => {
       {/* Header & Legend */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h2 className="text-xl font-bold text-slate-800">Parking Map</h2>
-        
+
         <div className="flex gap-3 bg-slate-50 p-2 rounded-lg border border-slate-100">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 bg-[#22c55e] rounded-sm"></div>

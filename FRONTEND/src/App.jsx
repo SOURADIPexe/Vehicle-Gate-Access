@@ -12,11 +12,11 @@ function App() {
     <div className="min-h-screen bg-[#f1f5f9] p-6 md:p-10 text-slate-700">
       <div className="max-w-7xl mx-auto">
         <Navbar activeTab={currentTab} onTabChange={setCurrentTab} />
-        
+
         {currentTab === "Dashboard" && <Dashboard />}
         {currentTab === "Manage Vehicles" && <ManageVehicles />}
         {currentTab === "Parking" && <Parking />}
-        
+
         {currentTab === "Live Map" && <div className="p-20 text-center">Coming Soon</div>}
       </div>
     </div>

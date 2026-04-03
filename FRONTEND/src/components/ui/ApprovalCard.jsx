@@ -30,7 +30,7 @@ export const ApprovalCard = ({ plate, owner, type, time, isRegistered, isReserve
 
   return (
     <div className={`bg-white border-2 ${isRegistered || isReserved ? 'border-slate-50' : 'border-orange-100'} rounded-2xl p-5 mb-4 hover:shadow-md transition-all group relative overflow-hidden`}>
-      
+
       {/* Visual Indicator for Registration Status */}
       <div className="absolute top-0 right-0 flex">
         {canAutoApprove && timeLeft > 0 && (
@@ -57,7 +57,7 @@ export const ApprovalCard = ({ plate, owner, type, time, isRegistered, isReserve
               {type}
             </span>
           </div>
-          
+
           <h3 className="text-lg font-mono font-bold text-slate-800 tracking-tight">
             {plate}
           </h3>
@@ -73,7 +73,7 @@ export const ApprovalCard = ({ plate, owner, type, time, isRegistered, isReserve
             </span>
           </div>
         </div>
-        
+
         <span className="text-[10px] font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded-md border border-slate-100 self-end">
           {time}
         </span>

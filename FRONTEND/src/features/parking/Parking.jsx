@@ -8,16 +8,16 @@ import { PARKING_SPOTS } from '../../data/mockData';
 
 export default function Parking() {
   // --- 1. State Management ---
-  const [registeredVehicles, setRegisteredVehicles] = useState([]); 
-  const [activeReservations, setActiveReservations] = useState([]); 
+  const [registeredVehicles, setRegisteredVehicles] = useState([]);
+  const [activeReservations, setActiveReservations] = useState([]);
   const [accessRecords, setAccessRecords] = useState([]); // Added state for AccessRecords
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedSpot, setSelectedSpot] = useState(null);
-  
+
   const searchRef = useRef(null);
 
   // --- 2. Load Data from all 3 Sources ---
@@ -70,10 +70,10 @@ export default function Parking() {
   const availableSpots = PARKING_SPOTS.filter(spot => {
     // 1. Check if spot is in Reservation DB
     const isReserved = activeReservations.some(res => res.spot === spot.id);
-    
+
     // 2. Check if spot is in AccessRecord DB
     const isOccupied = accessRecords.some(rec => rec.slot === spot.id);
-    
+
     // Only return true if it's not in either database
     return !isReserved && !isOccupied;
   });
@@ -87,8 +87,8 @@ export default function Parking() {
     const reservationData = {
       plate: selectedVehicle.plate,
       owner: selectedVehicle.owner || "Unknown",
-      type: selectedVehicle.type || "4-Wheeler", 
-      spot: spotId, 
+      type: selectedVehicle.type || "4-Wheeler",
+      spot: spotId,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -119,7 +119,7 @@ export default function Parking() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <div className="lg:col-span-8 flex flex-col gap-8">
         <ParkingMap spots={PARKING_SPOTS} />
-        <ParkingTable /> 
+        <ParkingTable />
       </div>
 
       <aside className="lg:col-span-4 flex flex-col gap-8 sticky top-6">
@@ -129,17 +129,17 @@ export default function Parking() {
             <div ref={searchRef} className="relative">
               <label className="text-xs font-bold text-slate-400 uppercase mb-2 block">Search Registered Vehicle</label>
               <div className="relative">
-                <input 
-                  type="text" 
-                  placeholder="Search by name or plate..." 
+                <input
+                  type="text"
+                  placeholder="Search by name or plate..."
                   value={searchTerm}
                   onChange={(e) => {
                     setSearchTerm(e.target.value);
                     setShowDropdown(true);
-                    setSelectedVehicle(null); 
+                    setSelectedVehicle(null);
                   }}
                   onFocus={() => setShowDropdown(true)}
-                  className={`w-full bg-slate-50 border ${selectedVehicle ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-slate-100'} rounded-xl px-5 py-3 pr-10 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-slate-700`} 
+                  className={`w-full bg-slate-50 border ${selectedVehicle ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-slate-100'} rounded-xl px-5 py-3 pr-10 outline-none focus:ring-2 focus:ring-blue-500/20 transition-all font-medium text-slate-700`}
                 />
                 {selectedVehicle ? <CheckCircle2 size={18} className="absolute right-4 top-3.5 text-emerald-500" /> : <Search size={18} className="absolute right-4 top-3.5 text-slate-400" />}
               </div>
@@ -147,11 +147,11 @@ export default function Parking() {
               {showDropdown && searchResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-slate-100 z-50 max-h-60 overflow-y-auto custom-scrollbar">
                   {searchResults.map((vehicle) => (
-                    <div 
+                    <div
                       key={vehicle._id}
                       onClick={() => {
                         setSelectedVehicle(vehicle);
-                        setSearchTerm(`${vehicle.plate} - ${vehicle.owner}`); 
+                        setSearchTerm(`${vehicle.plate} - ${vehicle.owner}`);
                         setShowDropdown(false);
                       }}
                       className="p-3 hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0 flex justify-between items-center group transition-colors"
@@ -182,21 +182,20 @@ export default function Parking() {
             </div>
 
             {/* CustomSelect now uses the filtered availableSpots */}
-            <CustomSelect 
+            <CustomSelect
               label="Available Parking Spot"
               placeholder="Select available spot"
-              options={availableSpots} 
+              options={availableSpots}
               onSelect={(spot) => setSelectedSpot(spot)}
             />
 
-            <button 
+            <button
               onClick={handleReserve}
               disabled={!selectedVehicle || !selectedSpot}
-              className={`w-full py-4 rounded-xl font-bold shadow-lg transition-all ${
-                !selectedVehicle || !selectedSpot 
-                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none' 
+              className={`w-full py-4 rounded-xl font-bold shadow-lg transition-all ${!selectedVehicle || !selectedSpot
+                  ? 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
                   : 'bg-[#4f46e5] text-white shadow-indigo-200 hover:bg-indigo-700 hover:shadow-indigo-300 transform active:scale-[0.98]'
-              }`}
+                }`}
             >
               Confirm Reservation
             </button>
@@ -210,7 +209,7 @@ export default function Parking() {
               {activeReservations.length}
             </span>
           </div>
-          
+
           <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
             {activeReservations.length > 0 ? (
               activeReservations.map((res) => (
@@ -218,8 +217,8 @@ export default function Parking() {
                   <div>
                     <p className="text-sm font-bold text-slate-700 font-mono group-hover:text-blue-600 transition-colors">{res.plate}</p>
                     <p className="text-[10px] text-slate-400 font-medium flex items-center gap-1.5 mt-1">
-                       <span className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500 font-bold">Slot {res.spot}</span>
-                       <span>• {res.owner}</span>
+                      <span className="bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500 font-bold">Slot {res.spot}</span>
+                      <span>• {res.owner}</span>
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -227,7 +226,7 @@ export default function Parking() {
                       <Clock size={16} className="text-blue-500" />
                       <span className="text-[10px] font-bold text-slate-400">{res.time}</span>
                     </div>
-                    <button 
+                    <button
                       onClick={() => handleRemove(res._id)}
                       className="p-2 text-rose-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
                       title="Remove Reservation"

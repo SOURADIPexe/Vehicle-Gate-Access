@@ -17,13 +17,13 @@ export const Navbar = ({ activeTab, onTabChange }) => {
             <CarFront size={12} className="text-blue-600" />
           </div>
         </div>
-        
+
         <div className="flex flex-col">
           <span className="text-lg font-black text-slate-900 leading-none tracking-tight">
             GATE<span className="text-blue-600">WATCH</span>
           </span>
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5 flex items-center gap-1">
-            <Zap size={8} className="fill-blue-400 text-blue-400" /> 
+            <Zap size={8} className="fill-blue-400 text-blue-400" />
             Security
           </span>
         </div>
@@ -32,14 +32,13 @@ export const Navbar = ({ activeTab, onTabChange }) => {
       {/* --- Navigation Tabs --- */}
       <div className="hidden md:flex items-center space-x-1">
         {tabs.map((tab) => (
-          <button 
+          <button
             key={tab}
             onClick={() => onTabChange(tab)}
-            className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all ${
-              activeTab === tab 
-                ? "bg-[#2563eb] text-white shadow-lg shadow-blue-100" 
+            className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all ${activeTab === tab
+                ? "bg-[#2563eb] text-white shadow-lg shadow-blue-100"
                 : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
-            }`}
+              }`}
           >
             {tab}
           </button>

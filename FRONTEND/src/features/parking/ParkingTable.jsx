@@ -11,13 +11,13 @@ export const ParkingTable = () => {
     const fetchParkedVehicles = async () => {
       try {
         const res = await axios.get('http://localhost:5000/api/records');
-        
+
         // Filter only 'Approved' vehicles to show as parked
         // Note: Check if your DB saves 'Approved' or 'approved' and match accordingly
-        const parkedOnly = res.data.filter(record => 
+        const parkedOnly = res.data.filter(record =>
           record.status === 'Approved' || record.status === 'approved'
         );
-        
+
         setVehicles(parkedOnly);
         setLoading(false);
       } catch (error) {
@@ -56,12 +56,12 @@ export const ParkingTable = () => {
             {vehicles.map((v) => (
               // Use MongoDB _id for the key
               <tr key={v._id} className="hover:bg-slate-50/50 transition-colors">
-                
+
                 {/* 1. Slot: AccessRecord uses 'slot', not 'spot' */}
                 <td className="py-4 font-bold text-slate-800">
                   {v.slot || "--"}
                 </td>
-                
+
                 {/* 2. Plate */}
                 <td className="py-4">
                   <span className="bg-slate-100 px-2.5 py-1.5 rounded-lg font-mono font-bold text-xs text-slate-700">

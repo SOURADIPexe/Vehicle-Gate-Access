@@ -6,7 +6,7 @@ import { ApprovalCard } from '../../components/ui/ApprovalCard';
 import { RecordTable } from './RecordTable';
 
 const socket = io('http://localhost:5000', {
-  transports: ['websocket'] 
+  transports: ['websocket']
 });
 
 const processedPlates = new Set();
@@ -14,18 +14,18 @@ const processedPlates = new Set();
 export default function Dashboard() {
   const [pending, setPending] = useState([]);
   const [records, setRecords] = useState([]);
-  
+
   const actionLocks = useRef(new Set());
 
   // 1. WebSocket Listener
   useEffect(() => {
     socket.on('new_plate_detected', (newPlate) => {
-      
-      const cleanPlate = newPlate.plate.trim(); 
+
+      const cleanPlate = newPlate.plate.trim();
 
       // --- 1. BLOCK DUPLICATE EVENTS ---
       if (processedPlates.has(cleanPlate)) {
-        return; 
+        return;
       }
 
       // Add to tracker & release after 30s
@@ -35,7 +35,7 @@ export default function Dashboard() {
       }, 30000);
 
       const formattedSocketData = {
-        id: newPlate.id, 
+        id: newPlate.id,
         plate: cleanPlate,
         type: newPlate.type || 'Car',
         owner: newPlate.owner || 'Guest',
@@ -59,7 +59,7 @@ export default function Dashboard() {
       try {
         const response = await axios.get('http://localhost:5000/api/plates');
         const formattedData = response.data.map(item => ({
-          id: item._id, 
+          id: item._id,
           plate: item.plateNumber,
           type: item.vehicleType || 'Car',
           owner: item.owner || 'Guest',
@@ -70,7 +70,7 @@ export default function Dashboard() {
           time: new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           rawTimestamp: item.timestamp
         }));
-        
+
         // Add DB items to processed blocker so we don't re-add them immediately
         formattedData.forEach(p => processedPlates.add(p.plate));
         setPending(formattedData);
@@ -104,12 +104,12 @@ export default function Dashboard() {
   // This is passed down to ApprovalCard. It runs when user clicks OR when card timer ends.
   const handleAction = async (item, action) => {
     // 🔒 Check Lock
-    if (actionLocks.current.has(item.id)) return; 
+    if (actionLocks.current.has(item.id)) return;
     actionLocks.current.add(item.id);
 
     try {
-      const timestamp = new Date().toLocaleTimeString([], { 
-        hour: '2-digit', minute: '2-digit', second: '2-digit' 
+      const timestamp = new Date().toLocaleTimeString([], {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
       });
 
       const recordData = {
@@ -141,7 +141,7 @@ export default function Dashboard() {
       console.error("❌ Action Error:", error);
       // Only unlock on error so user can retry. On success, we keep it locked 
       // since the item is removed from UI anyway.
-      actionLocks.current.delete(item.id); 
+      actionLocks.current.delete(item.id);
     }
   };
 
@@ -151,8 +151,8 @@ export default function Dashboard() {
         <h2 className="text-xl font-bold text-slate-800 mb-6">Pending Approvals</h2>
         <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
           {pending.map((item) => (
-            <ApprovalCard 
-              key={item.id} 
+            <ApprovalCard
+              key={item.id}
               {...item} // Passes all data (plate, owner, etc.)
               onApprove={() => handleAction(item, 'approved')}
               onDeny={() => handleAction(item, 'denied')}
