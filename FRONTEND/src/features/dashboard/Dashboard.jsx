@@ -4,6 +4,8 @@ import { io } from 'socket.io-client';
 import { Calendar, Check } from 'lucide-react';
 import { ApprovalCard } from '../../components/ui/ApprovalCard';
 import { RecordTable } from './RecordTable';
+import { ParkingMap } from '../parking/ParkingMap';
+import { PARKING_SPOTS } from '../../data/mockData';
 
 const socket = io('http://localhost:5000', {
   transports: ['websocket']
@@ -94,12 +96,6 @@ export default function Dashboard() {
     fetchRecords();
   }, []);
 
-  const generateRandomSlot = () => {
-    const block = Math.random() < 0.5 ? 'A' : 'B';
-    const number = Math.floor(Math.random() * 10) + 1;
-    return `${block}${number}`;
-  };
-
   // --- THE ACTION HANDLER ---
   // This is passed down to ApprovalCard. It runs when user clicks OR when card timer ends.
   const handleAction = async (item, action) => {
@@ -112,12 +108,32 @@ export default function Dashboard() {
         hour: '2-digit', minute: '2-digit', second: '2-digit'
       });
 
+      let assignedSlot = 'N/A';
+      
+      if (action === 'approved') {
+        if (item.reservedSlot) {
+          assignedSlot = item.reservedSlot;
+        } else {
+          try {
+            const assignRes = await axios.post('http://localhost:5000/api/slots/assign', { type: item.type });
+            assignedSlot = assignRes.data.slot;
+          } catch (err) {
+            console.error("Assign slot error:", err);
+            // Fallback or error handling
+            assignedSlot = 'Pending';
+          }
+        }
+        
+        // Trigger the physical ESP32 gate
+        axios.post('http://localhost:5000/api/gate/trigger').catch(e => console.log("Gate error:", e));
+      }
+
       const recordData = {
         plate: item.plate,
         owner: item.owner,
         type: item.type,
         status: action === 'approved' ? 'Approved' : 'Denied',
-        slot: action === 'approved' ? (item.reservedSlot || generateRandomSlot()) : 'N/A',
+        slot: assignedSlot,
         timestamp: timestamp
       };
 
@@ -168,7 +184,12 @@ export default function Dashboard() {
       </aside>
 
       <main className="lg:col-span-8 bg-white rounded-[32px] p-8 shadow-sm h-[700px] flex flex-col">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+          <h2 className="text-xl font-bold text-slate-800">Live Parking Layout</h2>
+        </div>
+        <ParkingMap spots={PARKING_SPOTS} />
+
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-4">
           <h2 className="text-xl font-bold text-slate-800">Access Records</h2>
           <div className="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-4 py-2 text-slate-400">
             <span className="text-sm font-medium">{new Date().toLocaleDateString('en-GB')}</span>

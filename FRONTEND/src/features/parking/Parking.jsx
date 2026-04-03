@@ -74,13 +74,28 @@ export default function Parking() {
     // 2. Check if spot is in AccessRecord DB
     const isOccupied = accessRecords.some(rec => rec.slot === spot.id);
 
-    // Only return true if it's not in either database
-    return !isReserved && !isOccupied;
+    // 3. Type Checking: 4-Wheeler -> 4W, 2-Wheeler -> 2W
+    let isTypeMatch = true;
+    if (selectedVehicle) {
+      const vType = selectedVehicle.type || "4-Wheeler";
+      const isCar = vType.includes('4') || vType.includes('Car');
+      if (isCar && spot.type !== '4W') isTypeMatch = false;
+      if (!isCar && spot.type !== '2W') isTypeMatch = false;
+    }
+
+    // Only return true if it's not in either database AND matches car type
+    return !isReserved && !isOccupied && isTypeMatch;
   });
 
   // --- 6. Handle Reservation Logic ---
   const handleReserve = async () => {
     if (!selectedVehicle || !selectedSpot) return;
+
+    const hasExistingReservation = activeReservations.some(res => res.plate === selectedVehicle.plate);
+    if (hasExistingReservation) {
+      alert("This vehicle already has an active reservation! Please remove the older slot before booking another.");
+      return;
+    }
 
     const spotId = selectedSpot.id || selectedSpot.label || selectedSpot;
 

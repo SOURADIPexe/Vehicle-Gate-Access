@@ -28,28 +28,14 @@ export const INITIAL_PENDING = [
 
 
 export const PARKING_SPOTS = [
-  // Row A
-  { id: 'A1', type: '2W', status: 'occupied' },
-  { id: 'A2', type: '2W', status: 'available' },
-  { id: 'A3', type: '2W', status: 'available' },
-  { id: 'A4', type: '2W', status: 'available' },
-  { id: 'A5', type: '2W', status: 'available' },
-  { id: 'A6', type: '2W', status: 'available' },
-  { id: 'A7', type: '2W', status: 'available' },
-  { id: 'A8', type: '2W', status: 'available' },
-  { id: 'A9', type: '2W', status: 'available' },
-  { id: 'A10', type: '2W', status: 'available' },
-  // Row B
-  { id: 'B1', type: '4W', status: 'occupied' },
-  { id: 'B2', type: '4W', status: 'available' },
-  { id: 'B3', type: '4W', status: 'available' },
-  { id: 'B4', type: '4W', status: 'available' },
-  { id: 'B5', type: '4W', status: 'available' },
-  { id: 'B6', type: '4W', status: 'available' },
-  { id: 'B7', type: '4W', status: 'available' },
-  { id: 'B8', type: '4W', status: 'available' },
-  { id: 'B9', type: '4W', status: 'available' },
-  { id: 'B10', type: '4W', status: 'available' },
+  // Row A (4-Wheeler)
+  { id: 'A1', type: '4W', status: 'available' },
+  { id: 'A2', type: '4W', status: 'available' },
+  { id: 'A3', type: '4W', status: 'available' },
+  // Row B (2-Wheeler)
+  { id: 'B1', type: '2W', status: 'available' },
+  { id: 'B2', type: '2W', status: 'available' },
+  { id: 'B3', type: '2W', status: 'available' }
 ];
 
 export const PARKED_VEHICLES = [
